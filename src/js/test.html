@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <meta charset="utf-8">
+  <title>Complex Polylines</title>
+  <style>
+    /* Always set the map height explicitly to define the size of the div
+     * element that contains the map. */
+    #map {
+      width: auto;
+      height: 500px;
+    }
+    /* Optional: Makes the sample page fill the window. */
+    html, body {
+      height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+    #sidebar{
+      float: right;
+      width: 150px;
+    }
+
+
+  </style>
+  </head>
+  <body>
+  <div id="map"></div>
+
+
+  <div id="sidebar">
+
+    <button>눌러라</button>
+
+  </div>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+
+    <script>
+  var arr = [   //마인드맵에서 받아온 좌표 배열
+    {title : '비트', lat: 37.570518, lng: 126.985244, descs : '너무 좋아^0^'},
+    {title : '1', lat: 37.570518, lng: 126.984671, descs : '너무 좋아^0^'},
+    {title : '2', lat:37.569779, lng: 126.986341, descs : '너무 좋아^0^'},
+    {title : '3', lat: 37.571658, lng: 126.986411, descs : '너무 좋아^0^'}
+  ];
+  var recommend = [ //추천 장소 좌표 배열
+    {title : '4', lat: 37.572756, lng: 126.982403, descs : '너무 좋아^0^'},
+    {title : '5', lat: 37.571505, lng: 126.979249, descs : '너무 좋아^0^'},
+    {title : '6', lat: 37.570978, lng: 126.973992, descs : '너무 좋아^0^'},
+  ]
+
+
+  var poly;
+  var map;
+
+  var marker;
+
+
+  function initMap() {  //맵 설정
+    map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 16, //기본 확대 상태
+      center: arr[0],
+      minZoom: 13 //확대 가능한 최소 크기
+    });
+
+    poly = new google.maps.Polyline({ //선분 모양 설정
+      strokeColor: '#000000',
+      strokeOpacity: 1.0,
+      strokeWeight: 3
+    });
+
+    var path = poly.getPath();
+
+
+    for (var i = 0; i < arr.length; i++){ //마인드맵 마커로 경로 그리기
+
+     var marker = new google.maps.Marker({
+        position: arr[i],
+        title: arr[i].title,
+        map: map
+      });
+
+     poly.getPath().push(marker.position);  //경로 그리기
+
+    }
+
+
+
+    for (var i = 0; i < recommend.length; i++){ //추천 마커 생성
+      marker = new google.maps.Marker({
+        position: recommend[i],
+        title: recommend[i].title,
+        map: map
+      });
+
+      (function(target) { //마커에 클릭 이벤트, 클릭한 마커를 경로 배열에 추가
+
+        google.maps.event.addListener(target,'click',function() {
+
+          //alert(target.position);
+          poly.getPath().push(target.position);
+        });
+
+      })(marker);
+
+
+
+    }
+
+    console.dir(marker);
+
+
+
+    poly.setMap(map);
+
+
+
+
+
+  }
+
+  $(document).ready(function () {
+    var sidebar = $("#sidebar");
+
+    sidebar.on("click", function (e) {
+      e.preventDefault();
+      console.log("dd")
+
+    })
+
+
+  })
+
+
+</script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAielEI8uwxowfwwoNiElV53KdwTHbe1ew&callback=initMap">
+</script>
+</body>
+</html>
