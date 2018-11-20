@@ -1,3 +1,7 @@
+
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -83,14 +87,19 @@
 <script>
   var arr = [   //마인드맵에서 받아온 좌표 배열
     {title: '비트', lat: 37.570518, lng: 126.985244, descs: '너무 좋아^0^'},
-    {title: '1', lat: 37.570518, lng: 126.984671, descs: '너무 좋아^0^'},
-    {title: '2', lat: 37.569779, lng: 126.986341, descs: '너무 좋아^0^'},
-    {title: '3', lat: 37.571658, lng: 126.986411, descs: '너무 좋아^0^'}
+    {title: '1', lat: 37.570558, lng: 126.991984, descs: '너무 좋아^0^'},
+    {title: '2', lat: 37.566341, lng: 126.992260, descs: '너무 좋아^0^'},
+    {title: '3', lat: 37.565711, lng: 126.975130, descs: '너무 좋아^0^'}
   ];
+  var course = new Array();
+
+
   var recommend = [ //추천 장소 좌표 배열
-    {title: '4', lat: 37.572756, lng: 126.982403, descs: '너무 좋아^0^'},
-    {title: '5', lat: 37.571505, lng: 126.979249, descs: '너무 좋아^0^'},
-    {title: '6', lat: 37.570978, lng: 126.973992, descs: '너무 좋아^0^'},
+    {title: '4', lat: 37.570159, lng: 126.975162, descs: '너무 좋아^0^'},
+    {title: '5', lat: 37.570142, lng: 126.980266, descs: '너무 좋아^0^'},
+    {title: '6', lat: 37.574385, lng:  126.980330, descs: '너무 좋아^0^'},
+    {title: '7', lat: 37.574564, lng:  126.984600, descs: '너무 좋아^0^'},
+    {title: '8', lat: 37.570518, lng: 126.985244, descs: '너무 좋아^0^'}
   ]
 
 
@@ -101,13 +110,13 @@
 
   $(function () {
     $("#sortable").sortable();
-    $("#sortable").disableSelection();
+    // $("#sortable").disableSelection();
   });
 
   function initMap() {  //맵 설정
     map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 16, //기본 확대 상태
-      center: arr[0],
+      zoom: 15, //기본 확대 상태
+      center: arr[arr.length-1],
       minZoom: 13 //확대 가능한 최소 크기
     });
 
@@ -130,21 +139,24 @@
         position: arr[i],
         title: arr[i].title,
         map: map,
-        icon: icon
+        icon: icon,
+        myPos: arr[i]
       });
-
+      course.push(marker.myPos);
       poly.getPath().push(marker.position);  //경로 그리기
-
     }
 
 
     for (var i = 0; i < recommend.length; i++) { //추천 마커 생성
+
       marker = new google.maps.Marker({
         position: recommend[i],
         title: recommend[i].title,
         map: map,
-        icon: icon
+        icon: icon,
+        myPos: recommend[i]
       });
+
 
       (function (target) { //마커에 클릭 이벤트, 클릭한 마커를 경로 배열에 추가
 
@@ -152,7 +164,8 @@
 
           //alert(target.position);
           poly.getPath().push(target.position);
-          console.log(path);
+          course.push(target.myPos);
+          console.log(course);
         });
 
       })(marker);
@@ -163,22 +176,13 @@
     console.dir(marker);
 
 
+
     poly.setMap(map);
 
 
   }
 
-  $(document).ready(function () {
-    var sidebar = $("#sidebar");
 
-    sidebar.on("click", function (e) {
-      e.preventDefault();
-      console.log("dd")
-
-    })
-
-
-  })
 
 
 </script>
